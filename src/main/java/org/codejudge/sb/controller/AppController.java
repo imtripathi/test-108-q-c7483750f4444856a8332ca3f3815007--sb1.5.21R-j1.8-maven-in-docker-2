@@ -33,7 +33,7 @@ public class AppController {
 	
     @SuppressWarnings("static-access")
 	@ApiOperation("This create the username")
-    @PostMapping("/create/{username}")
+    @PostMapping("/create")
     public ResponseEntity<UserResponse> create(@RequestBody CreateUser  username ) throws UserCreationException {
     	UserResponse usrRes= new UserResponse();
     	usrRes=appService.create(username.getUsername());
