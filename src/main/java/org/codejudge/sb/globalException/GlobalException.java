@@ -1,6 +1,7 @@
 package org.codejudge.sb.globalException;
 
 import org.codejude.sb.model.ErrorResp;
+import org.codejudge.sb.exception.BadDataException;
 import org.codejudge.sb.exception.FriendReqException;
 import org.codejudge.sb.exception.NoDataFoundException;
 import org.codejudge.sb.exception.UserCreationException;
@@ -37,5 +38,15 @@ public class GlobalException {
        return new ResponseEntity(myError,
                                HttpStatus.valueOf(404));
     }
+	
+	@ExceptionHandler(BadDataException.class)
+    protected ResponseEntity<Error> handleExceptionFriend(BadDataException ex) {
+       ErrorResp myError = new ErrorResp();
+            myError.setReason(ex.getMessage());
+            myError.setStatus("failure");
+       return new ResponseEntity(myError,
+                               HttpStatus.valueOf(400));
+    }
+
 
 }

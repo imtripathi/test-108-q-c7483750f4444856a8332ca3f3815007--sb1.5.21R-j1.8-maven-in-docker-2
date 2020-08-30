@@ -29,6 +29,6 @@ public interface FriendReqRepo extends CrudRepository<FriendRequest,Serializable
 	List<FriendRequest> getFriendSuggestion(String friend_req_from);
 
 	 
-	 @Query(value = "select * from friend_request where  friend_req_from=?1 and friend_req_to=?2 and accepted='0'", nativeQuery = true)
+	 @Query(value = "select * from friend_request where  friend_req_from=?1 and friend_req_to=?2", nativeQuery = true)
 	 List<FriendRequest> checkRequest( String friend_req_from, String friend_req_to );
 }

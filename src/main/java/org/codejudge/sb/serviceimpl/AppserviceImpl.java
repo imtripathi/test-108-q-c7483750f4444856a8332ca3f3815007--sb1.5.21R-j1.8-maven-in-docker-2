@@ -11,6 +11,7 @@ import org.codejude.sb.model.UserResponse;
 import org.codejudge.sb.entity.FriendRequest;
 import org.codejudge.sb.entity.Friends;
 import org.codejudge.sb.entity.User;
+import org.codejudge.sb.exception.BadDataException;
 import org.codejudge.sb.exception.FriendReqException;
 import org.codejudge.sb.exception.NoDataFoundException;
 import org.codejudge.sb.exception.UserCreationException;
@@ -50,7 +51,7 @@ public class AppserviceImpl implements Appservice {
 	}
 
 	@Override
-	public ResponseCode sendFriendRequest(String friendrequestfrom, String friendrequestto) throws FriendReqException, NoDataFoundException {
+	public ResponseCode sendFriendRequest(String friendrequestfrom, String friendrequestto) throws FriendReqException, NoDataFoundException, BadDataException {
 		
 		FriendRequest frndReq = new FriendRequest();
 		ResponseCode resp = new ResponseCode();
@@ -76,20 +77,23 @@ public class AppserviceImpl implements Appservice {
 		return resp;
 	}
 
-	private void friendReqExists(String friendrequestfrom, String friendrequestto) throws NoDataFoundException {
-		List<FriendRequest> frt = friendReqst.checkRequest(friendrequestto, friendrequestfrom);
-		if(frt!=null && !frt.isEmpty()) {
-			throw new NoDataFoundException("friend request Exixts");
+	private void friendReqExists(String friendrequestfrom, String friendrequestto) throws  BadDataException {
+		List<FriendRequest> frt = friendReqst.checkRequest(friendrequestfrom, friendrequestto);
+		for(FriendRequest f:frt) {
+			if(f.getAccepted()==0 && f.getFriendReqFrom().equals(friendrequestfrom) && f.getFriendReqTo().equals(friendrequestto)) {
+			
+			throw new BadDataException("friend request Exixts");
+			}
 		}
 	}
 
-	private void userExist(String friendrequestfrom, String friendrequestto) throws NoDataFoundException {
-		List<User> usr=(List<User>) userRepo.findAll();
+	private void userExist(String friendrequestfrom, String friendrequestto) throws BadDataException {
+		List<User> usr=(List<User>) userRepo.getUser(friendrequestto);
 		for(User us:usr) {
 			if(us.getUsername().equals(friendrequestto)) {
 				
 			}else {
-				throw new NoDataFoundException("No userExixts");
+				throw new BadDataException("No userExixts");
 			}
 		}
 		
@@ -131,7 +135,7 @@ public class AppserviceImpl implements Appservice {
 	}
 
 	@Override
-	public PendingFriendRequest getPendingFriendRequest(String pendingfriendreqfor) throws NoDataFoundException {
+	public PendingFriendRequest getPendingFriendRequest(String pendingfriendreqfor) throws BadDataException,NoDataFoundException   {
 		PendingFriendRequest pfr = new PendingFriendRequest();
 		userExist(null,pendingfriendreqfor);
 		List<String> list = new ArrayList<>();
@@ -147,7 +151,7 @@ public class AppserviceImpl implements Appservice {
 	}
 
 	@Override
-	public FriendList getFriendList(String friendlistfor) throws NoDataFoundException {
+	public FriendList getFriendList(String friendlistfor) throws NoDataFoundException, BadDataException {
 		FriendList frL = new FriendList();
 		List<String> list = new ArrayList<>();
 		userExist(null,friendlistfor);

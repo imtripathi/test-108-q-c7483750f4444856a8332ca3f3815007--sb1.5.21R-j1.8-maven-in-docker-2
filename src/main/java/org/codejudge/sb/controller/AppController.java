@@ -6,6 +6,7 @@ import org.codejude.sb.model.FriendSuggestionList;
 import org.codejude.sb.model.PendingFriendRequest;
 import org.codejude.sb.model.ResponseCode;
 import org.codejude.sb.model.UserResponse;
+import org.codejudge.sb.exception.BadDataException;
 import org.codejudge.sb.exception.FriendReqException;
 import org.codejudge.sb.exception.NoDataFoundException;
 import org.codejudge.sb.exception.UserCreationException;
@@ -44,7 +45,7 @@ public class AppController {
     @SuppressWarnings("static-access")
 	@ApiOperation("This sends the friend request")
     @PostMapping("/add/{friendrequestfrom}/{friendrequestto}")
-    public ResponseEntity<ResponseCode> sendFriendRequest(@PathVariable(name ="friendrequestfrom") String friendrequestfrom,@PathVariable(name ="friendrequestto") String friendrequestto ) throws FriendReqException, NoDataFoundException  {
+    public ResponseEntity<ResponseCode> sendFriendRequest(@PathVariable(name ="friendrequestfrom") String friendrequestfrom,@PathVariable(name ="friendrequestto") String friendrequestto ) throws FriendReqException, NoDataFoundException, BadDataException  {
     	ResponseCode res= new ResponseCode();
     	res=appService.sendFriendRequest(friendrequestfrom,friendrequestto);
         return ResponseEntity.ok(res).status(202).body(res);
@@ -53,7 +54,7 @@ public class AppController {
     @SuppressWarnings("static-access")
 	@ApiOperation("This gets the pending friend request")
     @GetMapping("/friendRequests/{pendingfriendreqfor}")
-    public ResponseEntity<PendingFriendRequest> getPendingFriendRequest(@PathVariable(name ="pendingfriendreqfor") String pendingfriendreqfor ) throws NoDataFoundException   {
+    public ResponseEntity<PendingFriendRequest> getPendingFriendRequest(@PathVariable(name ="pendingfriendreqfor") String pendingfriendreqfor ) throws NoDataFoundException, BadDataException   {
     	PendingFriendRequest res= new PendingFriendRequest();
     	res=appService.getPendingFriendRequest(pendingfriendreqfor);
         return ResponseEntity.ok(res).status(200).body(res);
@@ -62,7 +63,7 @@ public class AppController {
     @SuppressWarnings("static-access")
 	@ApiOperation("This gets the friend list of user")
     @GetMapping("/friends/{friendlistfor}")
-    public ResponseEntity<FriendList> getFriendList(@PathVariable(name ="friendlistfor") String friendlistfor ) throws NoDataFoundException   {
+    public ResponseEntity<FriendList> getFriendList(@PathVariable(name ="friendlistfor") String friendlistfor ) throws NoDataFoundException, BadDataException   {
     	FriendList res= new FriendList();
     	res=appService.getFriendList(friendlistfor);
         return ResponseEntity.ok(res).status(200).body(res);
