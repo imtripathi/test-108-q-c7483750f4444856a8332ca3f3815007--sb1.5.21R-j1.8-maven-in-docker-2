@@ -44,7 +44,7 @@ public class AppController {
     @SuppressWarnings("static-access")
 	@ApiOperation("This sends the friend request")
     @PostMapping("/add/{friendrequestfrom}/{friendrequestto}")
-    public ResponseEntity<ResponseCode> sendFriendRequest(@PathVariable(name ="friendrequestfrom") String friendrequestfrom,@PathVariable(name ="friendrequestto") String friendrequestto ) throws FriendReqException  {
+    public ResponseEntity<ResponseCode> sendFriendRequest(@PathVariable(name ="friendrequestfrom") String friendrequestfrom,@PathVariable(name ="friendrequestto") String friendrequestto ) throws FriendReqException, NoDataFoundException  {
     	ResponseCode res= new ResponseCode();
     	res=appService.sendFriendRequest(friendrequestfrom,friendrequestto);
         return ResponseEntity.ok(res).status(202).body(res);

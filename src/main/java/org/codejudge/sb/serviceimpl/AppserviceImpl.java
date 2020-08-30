@@ -50,12 +50,15 @@ public class AppserviceImpl implements Appservice {
 	}
 
 	@Override
-	public ResponseCode sendFriendRequest(String friendrequestfrom, String friendrequestto) throws FriendReqException {
+	public ResponseCode sendFriendRequest(String friendrequestfrom, String friendrequestto) throws FriendReqException, NoDataFoundException {
+		
 		FriendRequest frndReq = new FriendRequest();
 		ResponseCode resp = new ResponseCode();
 		frndReq.setFriendReqFrom(friendrequestfrom);
 		frndReq.setFriendReqTo(friendrequestto);
 		frndReq.setAccepted(0);
+		userExist(friendrequestfrom,friendrequestto);
+		friendReqExists(friendrequestfrom,friendrequestto);
 		try {
 			List<FriendRequest> fr = (List<FriendRequest>) friendReqst.findfriendReq(friendrequestto);
 			if (checkFriendReq(fr, friendrequestfrom)) {
@@ -71,6 +74,25 @@ public class AppserviceImpl implements Appservice {
 		resp.setStatus("success");
 
 		return resp;
+	}
+
+	private void friendReqExists(String friendrequestfrom, String friendrequestto) throws NoDataFoundException {
+		List<FriendRequest> frt = friendReqst.checkRequest(friendrequestto, friendrequestfrom);
+		if(frt!=null && !frt.isEmpty()) {
+			throw new NoDataFoundException("friend request Exixts");
+		}
+	}
+
+	private void userExist(String friendrequestfrom, String friendrequestto) throws NoDataFoundException {
+		List<User> usr=(List<User>) userRepo.findAll();
+		for(User us:usr) {
+			if(us.getUsername().equals(friendrequestto)) {
+				
+			}else {
+				throw new NoDataFoundException("No userExixts");
+			}
+		}
+		
 	}
 
 	private void saveConfirmedFriends(String friendrequestto, String friendrequestfrom) {
@@ -111,6 +133,7 @@ public class AppserviceImpl implements Appservice {
 	@Override
 	public PendingFriendRequest getPendingFriendRequest(String pendingfriendreqfor) throws NoDataFoundException {
 		PendingFriendRequest pfr = new PendingFriendRequest();
+		userExist(null,pendingfriendreqfor);
 		List<String> list = new ArrayList<>();
 		List<FriendRequest> frt = friendReqst.getpendingFriendReq(pendingfriendreqfor);
 		if (frt == null || frt.isEmpty()) {
@@ -127,6 +150,7 @@ public class AppserviceImpl implements Appservice {
 	public FriendList getFriendList(String friendlistfor) throws NoDataFoundException {
 		FriendList frL = new FriendList();
 		List<String> list = new ArrayList<>();
+		userExist(null,friendlistfor);
 		List<FriendRequest> frt = friendReqst.getFriendList(friendlistfor);
 		if (frt == null || frt.isEmpty()) {
 			throw new NoDataFoundException("No friend request pending");

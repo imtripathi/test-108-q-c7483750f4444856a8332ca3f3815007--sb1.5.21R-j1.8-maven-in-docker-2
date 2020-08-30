@@ -13,7 +13,7 @@ public interface Appservice {
 
 	UserResponse create(String username) throws UserCreationException;
 
-	ResponseCode sendFriendRequest(String friendrequestfrom, String friendrequestto) throws FriendReqException;
+	ResponseCode sendFriendRequest(String friendrequestfrom, String friendrequestto) throws FriendReqException, NoDataFoundException;
 
 	PendingFriendRequest getPendingFriendRequest(String pendingfriendreqfor) throws NoDataFoundException;
 
