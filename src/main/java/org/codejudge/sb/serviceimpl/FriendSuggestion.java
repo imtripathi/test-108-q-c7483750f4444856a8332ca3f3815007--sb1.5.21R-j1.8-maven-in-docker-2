@@ -1,6 +1,7 @@
 package org.codejudge.sb.serviceimpl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -75,6 +76,7 @@ public class FriendSuggestion
 	public FriendSuggestionList getFriendSuggestionList(String friendsufggestionfor, FriendRepo frnds) throws NoDataFoundException{
 		FriendSuggestionList fs= new FriendSuggestionList();
 		List<String> ls= new ArrayList<>();
+		List<String> r= new ArrayList<>();
 		List<Friends>fr=frnds.getFriendSuggestion(friendsufggestionfor);
 		if (fr == null || fr.isEmpty()) {
 			throw new NoDataFoundException("No friend suggestion");
@@ -85,12 +87,29 @@ public class FriendSuggestion
 			
 			for(Friends frs:fr) {
 				if(frs.getFriendReqFrom().equals(friendsufggestionfor)) {
-					nodeA.addneighbours(new Node(frs.getFriendReqTo()));
+					if(checkDpulicate(r,friendsufggestionfor)){
+						friendsufggestionfor=frs.getFriendReqFrom();
+					}else {
+						nodeA.addneighbours(new Node(frs.getFriendReqTo()));
+						r.add(frs.getFriendReqTo());
+						friendsufggestionfor=frs.getFriendReqTo();
+					}}else if(frs.getFriendReqTo().equals(friendsufggestionfor)) {
+						
+							if(checkDpulicate(r,friendsufggestionfor)){
+								friendsufggestionfor=frs.getFriendReqFrom();
+							}else {
+								nodeA.addneighbours(new Node(frs.getFriendReqFrom()));
+								r.add(frs.getFriendReqFrom());
+								friendsufggestionfor=frs.getFriendReqFrom();
+							
+					}
 					
-					friendsufggestionfor=frs.getFriendReqTo();
+					
+					
 					break;
 					
-				}}
+				}
+				}
 				len--;
 		}
 		
@@ -98,11 +117,28 @@ public class FriendSuggestion
 		for(int i=2;i<list.size();i++) {
 			ls.add(list.get(i));
 		}
-		
-		fs.setSuggestions(ls);
+		List<String> rm= new ArrayList<>(new HashSet<>(ls));
+		fs.setSuggestions(rm);
 		
 		return fs;
 			}
+
+	private boolean checkDpulicate(List<String> r, String friendsufggestionfor) {
+		int count=0;
+		if(r!=null && !r.isEmpty()) {
+			for(String s:r) {
+				if(r.equals(friendsufggestionfor)) {
+					count++;
+				}
+			}
+			if(count>1) {
+				return true;
+			}else {
+				return false;
+			}
+		}
+		return false;
+	}
 
 	
 	
