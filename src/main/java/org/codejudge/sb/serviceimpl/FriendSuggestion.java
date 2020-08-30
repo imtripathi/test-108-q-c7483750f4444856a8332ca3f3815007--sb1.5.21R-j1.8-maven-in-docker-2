@@ -84,10 +84,10 @@ public class FriendSuggestion
 		while(len>=0) {
 			
 			for(Friends frs:fr) {
-				if(frs.getFriendReqTo().equals(friendsufggestionfor)) {
-					nodeA.addneighbours(new Node(frs.getFriendReqFrom()));
+				if(frs.getFriendReqFrom().equals(friendsufggestionfor)) {
+					nodeA.addneighbours(new Node(frs.getFriendReqTo()));
 					
-					friendsufggestionfor=frs.getFriendReqFrom();
+					friendsufggestionfor=frs.getFriendReqTo();
 					break;
 					
 				}}
@@ -98,9 +98,7 @@ public class FriendSuggestion
 		for(int i=2;i<list.size();i++) {
 			ls.add(list.get(i));
 		}
-		if (ls == null || ls.isEmpty()) {
-			throw new NoDataFoundException("No friend suggestion");
-		}
+		
 		fs.setSuggestions(ls);
 		
 		return fs;

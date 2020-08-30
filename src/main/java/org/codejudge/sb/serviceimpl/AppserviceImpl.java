@@ -80,7 +80,7 @@ public class AppserviceImpl implements Appservice {
 	private void friendReqExists(String friendrequestfrom, String friendrequestto) throws  BadDataException {
 		List<FriendRequest> frt = friendReqst.checkRequest(friendrequestfrom, friendrequestto);
 		for(FriendRequest f:frt) {
-			if(f.getAccepted()==0 && f.getFriendReqFrom().equals(friendrequestfrom) && f.getFriendReqTo().equals(friendrequestto)) {
+			if(f.getFriendReqFrom().equals(friendrequestfrom) && f.getFriendReqTo().equals(friendrequestto)) {
 			
 			throw new BadDataException("friend request Exixts");
 			}
@@ -89,12 +89,8 @@ public class AppserviceImpl implements Appservice {
 
 	private void userExist(String friendrequestfrom, String friendrequestto) throws BadDataException {
 		List<User> usr=(List<User>) userRepo.getUser(friendrequestto);
-		for(User us:usr) {
-			if(us.getUsername().equals(friendrequestto)) {
-				
-			}else {
-				throw new BadDataException("No userExixts");
-			}
+		if(usr==null || usr.isEmpty()) {
+			throw new BadDataException("No user Exixts");
 		}
 		
 	}
