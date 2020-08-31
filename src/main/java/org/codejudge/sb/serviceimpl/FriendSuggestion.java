@@ -78,13 +78,6 @@ public class FriendSuggestion
 		List<String> ls= new ArrayList<>();
 		List<String> r= new ArrayList<>();
 		List<Friends>fr=frnds.getFriendSuggestion(friendsufggestionfor);
-		List<String> from= new ArrayList<>();
-		List<String> to= new ArrayList<>();
-		for(Friends frt:fr) {
-			from.add(frt.getFriendReqFrom());
-			to.add(frt.getFriendReqTo());
-		}
-		
 		if (fr == null || fr.isEmpty()) {
 			throw new NoDataFoundException("No friend suggestion");
 		}
@@ -121,27 +114,11 @@ public class FriendSuggestion
 		}
 		
 		List<String> list=bfs(nodeA);
-		
-		
-		
-		
-		
-		if(list.size()==7) {
-			list.add(to.get(3));
+		for(int i=2;i<list.size();i++) {
+			ls.add(list.get(i));
 		}
-	
-		if(list.size()==6) {
-			
-			list.add(from.get(1));
-			}
-		List<String> rm= new ArrayList<>(new HashSet<>(list));
-		if(rm.size()==5) {
-			ls.add(rm.get(3));
-		}else {
-			ls.add(rm.get(2));
-		}
-				fs.setSuggestions(ls);
-		
+		List<String> rm= new ArrayList<>(new HashSet<>(ls));
+		fs.setSuggestions(rm);
 		
 		return fs;
 			}
